@@ -10,10 +10,10 @@
   ],
   "contact": {
     "homepage": "N/A",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/taz40/piwalkerStorage"
   },
 
-  "license": "GPL-3.0",
+  "license": "MIT",
   "icon": "assets/piwalker_storage/icon.png",
 
   "environment": "*",
