@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "piwalker_storage",
+  "version": "${version}",
+
+  "name": "PiWalker's Storage Mod",
+  "description": "This mod adds a simple system to allow multiple storage blocks to be accessed as a single inventory.",
+  "authors": [
+    "PiWalker"
+  ],
+  "contact": {
+    "homepage": "N/A",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/piwalker_storage/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.piwalker.storage.PiWalkerStorage"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
