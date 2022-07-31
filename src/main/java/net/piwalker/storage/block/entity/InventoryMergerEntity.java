@@ -18,25 +18,49 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.piwalker.storage.PiWalkerStorage;
 
+import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+
 public class InventoryMergerEntity extends LockableContainerBlockEntity implements OpenableBlockEntityV2 {
 
-    LockableContainerBlockEntity chest;
+    ArrayList<LockableContainerBlockEntity> inventories;
+    boolean initialized = false;
 
     public InventoryMergerEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.INVENTORY_MERGER_ENTITY, pos, state);
+        inventories = new ArrayList<>();
+    }
+
+    public void testForInventory(BlockPos pos){
+        BlockEntity entity = world.getBlockEntity(pos);
+        if(entity != null && entity instanceof LockableContainerBlockEntity){
+            inventories.add((LockableContainerBlockEntity) entity);
+        }
+    }
+
+    public void tick(World world, BlockPos pos){
+        if(!initialized){
+            initialized = true;
+            update(world, pos);
+        }
     }
 
     public void update(World world, BlockPos pos)  {
-        BlockEntity entity = world.getBlockEntity(new BlockPos(pos.getX()+1, pos.getY(), pos.getZ()));
-        if(entity != null && entity instanceof LockableContainerBlockEntity){
-            chest = (LockableContainerBlockEntity) entity;
-        }
+        inventories = new ArrayList<>();
+        testForInventory(new BlockPos(pos.getX()+1, pos.getY(), pos.getZ()));
+        testForInventory(new BlockPos(pos.getX()-1, pos.getY(), pos.getZ()));
+        testForInventory(new BlockPos(pos.getX(), pos.getY()+1, pos.getZ()));
+        testForInventory(new BlockPos(pos.getX(), pos.getY()-1, pos.getZ()));
+        testForInventory(new BlockPos(pos.getX(), pos.getY(), pos.getZ()+1));
+        testForInventory(new BlockPos(pos.getX(), pos.getY(), pos.getZ()-1));
     }
 
     @Override
     protected Text getContainerName() {
-        return chest.getName();
+        return Text.literal("Inventory Merger");
     }
+
+
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -45,41 +69,83 @@ public class InventoryMergerEntity extends LockableContainerBlockEntity implemen
 
     @Override
     public int size() {
-        return chest.size();
+        int size = 0;
+        for(LockableContainerBlockEntity inventory : inventories){
+            size += inventory.size();
+        }
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return chest.isEmpty();
+        for(LockableContainerBlockEntity inventory : inventories){
+            if(!inventory.isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public ItemStack getStack(int slot) {
-        return chest.getStack(slot);
+        for(LockableContainerBlockEntity inventory : inventories){
+            if(slot < inventory.size()){
+                return inventory.getStack(slot);
+            }else{
+                slot -= inventory.size();
+            }
+        }
+        return null;
     }
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        return chest.removeStack(slot, amount);
+        for(LockableContainerBlockEntity inventory : inventories){
+            if(slot < inventory.size()){
+                return inventory.removeStack(slot, amount);
+            }else{
+                slot -= inventory.size();
+            }
+        }
+        return null;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-        return chest.removeStack(slot);
+        for(LockableContainerBlockEntity inventory : inventories){
+            if(slot < inventory.size()){
+                return inventory.removeStack(slot);
+            }else{
+                slot -= inventory.size();
+            }
+        }
+        return null;
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        chest.setStack(slot, stack);
+        for(LockableContainerBlockEntity inventory : inventories){
+            if(slot < inventory.size()){
+                inventory.setStack(slot, stack);
+                return;
+            }else{
+                slot -= inventory.size();
+            }
+        }
     }
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        return chest.canPlayerUse(player);
+        return true;
     }
 
     @Override
     public void clear() {
-        chest.clear();
+        for(LockableContainerBlockEntity inventory : inventories){
+            inventory.clear();
+        }
     }
+
+
+
 }

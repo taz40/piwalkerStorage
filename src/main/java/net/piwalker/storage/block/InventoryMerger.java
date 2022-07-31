@@ -6,6 +6,8 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -14,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.piwalker.storage.PiWalkerStorage;
 import net.piwalker.storage.block.entity.InventoryMergerEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,4 +47,14 @@ public class InventoryMerger extends Block implements BlockEntityProvider, Opena
         return this.ncl_onBlockUse(world, state, pos, player, hand, hit);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return new BlockEntityTicker<T>() {
+            @Override
+            public void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
+                ((InventoryMergerEntity) world.getBlockEntity(pos)).tick(world, pos);
+            }
+        };
+    }
 }

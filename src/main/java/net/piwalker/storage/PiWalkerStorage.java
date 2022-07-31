@@ -2,6 +2,7 @@ package net.piwalker.storage;
 
 import net.fabricmc.api.ModInitializer;
 import net.piwalker.storage.block.ModBlocks;
+import net.piwalker.storage.block.entity.ModBlockEntities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,5 +15,6 @@ public class PiWalkerStorage implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Initializing mod " + MOD_ID);
 		ModBlocks.registerBlocks();
+		ModBlockEntities.registerModBlockEntities();
 	}
 }
