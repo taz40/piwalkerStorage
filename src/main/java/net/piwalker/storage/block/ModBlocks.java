@@ -14,7 +14,7 @@ import net.piwalker.storage.item.ModItemGroups;
 
 public class ModBlocks {
 
-    public static Block INVENTORY_MERGER = registerBlock("inventory_merger", new Block(FabricBlockSettings.of(Material.STONE)), ModItemGroups.PIWALKER_STORAGE);
+    public static Block INVENTORY_MERGER = registerBlock("inventory_merger", new InventoryMerger(FabricBlockSettings.of(Material.STONE)), ModItemGroups.PIWALKER_STORAGE);
 
     private static Block registerBlock(String name, Block block, ItemGroup tab){
         registerBlockItem(name, block, tab);
