@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "piwalker_storage:block/inventory_merger"
+    }
+  }
+}
